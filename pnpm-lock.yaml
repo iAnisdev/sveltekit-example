@@ -8,6 +8,9 @@ dependencies:
   axios:
     specifier: ^1.6.8
     version: 1.6.8
+  svelte-toasts:
+    specifier: ^1.1.2
+    version: 1.1.2
 
 devDependencies:
   '@sveltejs/adapter-auto':
@@ -2182,6 +2185,10 @@ packages:
     dependencies:
       svelte: 4.2.7
     dev: true
+
+  /svelte-toasts@1.1.2:
+    resolution: {integrity: sha512-m+yL4eEKXyJoyjTYaH1j1GFwF0Pi8YDqnVfwWPDmwi4712iZesv+TNCmToSNlav3R5Vkmc8ZBRkT8DOcu3sywQ==}
+    dev: false
 
   /svelte@4.2.7:
     resolution: {integrity: sha512-UExR1KS7raTdycsUrKLtStayu4hpdV3VZQgM0akX8XbXgLBlosdE/Sf3crOgyh9xIjqSYB3UEBuUlIQKRQX2hg==}

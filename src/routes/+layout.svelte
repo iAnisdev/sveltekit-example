@@ -1,10 +1,10 @@
 <script>
 	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
+	import { toasts, ToastContainer, FlatToast } from 'svelte-toasts';
 	import '../app.pcss';
 	import TopLevelHeader from '../components/Shared/TopLevelHeader.svelte';
 	import TopLevelFooter from '../components/Shared/TopLevelFooter.svelte';
-	import { socketStatus, ticker } from '../stores/store';
+	import { socketStatus, latestTxs, ticker } from '../stores/store';
 
 	export let data;
 	let socket;
@@ -16,7 +16,6 @@
 	onMount(() => {
 		socket = new WebSocket('wss://ws.blockchain.info/inv');
 		socket.addEventListener('open', () => {
-			console.log('Opened');
 			socketStatus.set(false);
 			socket.send('{"op":"ping"}');
 
@@ -24,13 +23,25 @@
 		});
 		socket.addEventListener('message', (event) => {
 			const data = JSON.parse(event.data);
-			if (data.op === 'open') {
+			if (data.op === 'pong') {
 				socketStatus.set(true);
+				toasts.add({
+					title: 'Success',
+					description: 'Socket connected.',
+					duration: 10000, // 0 or negative to avoid auto-remove
+					placement: 'top-right',
+					type: 'info',
+					theme: 'dark',
+					type: 'success'
+				});
+			} else if (data.op === 'utx') {
+				latestTxs.update((txs) => {
+					txs.unshift(data.x);
+					return txs;
+				});
 			}
-			console.log('message', data);
 		});
 		socket.addEventListener('close', () => {
-			console.log('Closed');
 			socketStatus.set(false);
 		});
 		socket.addEventListener('error', (error) => {
@@ -47,3 +58,8 @@
 <TopLevelHeader />
 <slot />
 <TopLevelFooter />
+
+<ToastContainer placement="top-right" let:data>
+	<FlatToast {data} />
+	<!-- Provider template for your toasts -->
+</ToastContainer>
