@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { toasts, ToastContainer, FlatToast } from 'svelte-toasts';
 	import '../app.pcss';
 	import TopLevelHeader from '../components/Shared/TopLevelHeader.svelte';
@@ -48,6 +48,12 @@
 			console.error('Error:', error);
 			socketStatus.set(false);
 		});
+	});
+	onDestroy(() => {
+		if (socket !== undefined && socket.readyState === 1) {
+			socket.send('{"op":"unconfirmed_unsub"}');
+			socket.close();
+		}
 	});
 </script>
 
