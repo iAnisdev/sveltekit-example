@@ -1,6 +1,7 @@
 <script>
 	import '../app.pcss';
-	import TopLevelHeader from '../components/TopLevelHeader.svelte';
+	import TopLevelHeader from '../components/Shared/TopLevelHeader.svelte';
+	import TopLevelFooter from '../components/Shared/TopLevelFooter.svelte';
 	import { ticker } from '../stores/store';
 
 	export let data;
@@ -16,3 +17,5 @@
 
 <TopLevelHeader />
 <slot />
+<TopLevelFooter />
+
