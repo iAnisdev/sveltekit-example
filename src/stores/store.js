@@ -4,6 +4,7 @@ import BlockchainAPI from '../lib/BlockchainAPI';
 // Create a writable store
 export const ticker = writable([]);
 export const unconfirmedTransactions = writable([]);
+export const socketStatus = writable(false);
 
 // function to load unconfirmed transactions
 export async function LoadUnconfirmedTransactions() {

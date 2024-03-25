@@ -1,13 +1,13 @@
 <script>
-	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
-	import { ticker } from '../../stores/store.js';
+	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Badge } from 'flowbite-svelte';
+	import { socketStatus, ticker } from '../../stores/store.js';
 
 	$: values = $ticker;
 </script>
 
 <Navbar color="primary">
 	<NavBrand href="/">
-		<span class="self-center whitespace-nowrap text-xl font-semibold">BTC Rate Today</span>
+		<span class="self-center whitespace-nowrap text-xl font-semibold">BTC Rate Today <Badge rounded color={socketStatus ? 'green' : 'red'}>{socketStatus ? 'Active' : 'InActive'}</Badge></span>
 	</NavBrand>
 	<NavHamburger />
 	<NavUl>
