@@ -97,7 +97,7 @@
 			<TableBodyRow>
 				<TableBodyCell>{item.id}</TableBodyCell>
 				<TableBodyCell>{item.height}</TableBodyCell>
-				<TableBodyCell>{item.timestamp}</TableBodyCell>
+				<TableBodyCell>{new Date(item.timestamp * 1000).toLocaleString()}</TableBodyCell>
 				<TableBodyCell>{item.tx_count}</TableBodyCell>
 			</TableBodyRow>
 		{/each}

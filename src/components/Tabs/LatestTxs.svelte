@@ -57,7 +57,7 @@
 		{#each $sortItems as item}
 			<TableBodyRow>
 				<TableBodyCell>{item.hash}</TableBodyCell>
-				<TableBodyCell>{item.time}</TableBodyCell>
+				<TableBodyCell>{new Date(item.time * 1000).toLocaleString()}</TableBodyCell>
 				<TableBodyCell>{item.size}</TableBodyCell>
 			</TableBodyRow>
 		{/each}
