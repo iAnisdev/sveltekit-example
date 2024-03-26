@@ -20,7 +20,6 @@
 
 		<TabItem title="">
 			<div slot="title" class="flex items-center gap-2">
-				
 				Latest Transactions
 				<Badge rounded color="purple">{$latestTxs.length}</Badge>
 			  </div>
