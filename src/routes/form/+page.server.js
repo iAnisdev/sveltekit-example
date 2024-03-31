@@ -12,7 +12,7 @@ export const load = async () => {
 export const actions = {
 	default: async ({ request }) => {
 		const form = await superValidate(request, zod(Product));
-		console.log("form " , form);
+		
 		if (!form.valid) return fail(400, { form });
 
 		return message(form, 'Form posted successfully!');

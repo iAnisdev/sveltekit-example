@@ -2,6 +2,8 @@
 	import { page } from '$app/stores';
 	import { superForm } from 'sveltekit-superforms';
 	import SuperDebug from 'sveltekit-superforms';
+	import { BarLoader } from 'svelte-loading-spinners';
+	import { writable } from 'svelte/store';
 
 	import {
 		Table,
@@ -15,6 +17,8 @@
 		Select,
 		Button
 	} from 'flowbite-svelte';
+
+	const isLoading = writable(false);
 
 	import { slide } from 'svelte/transition';
 
@@ -83,8 +87,13 @@
 
 		async onUpdated({ form }) {
 			if (form.valid) {
-				console.log("form is valid ", form.data);
-                toggleRow(openRow);
+				// data to be sent to the server
+				isLoading.set(true);
+				items[openRow] = form.data;
+				setTimeout(() => {
+					isLoading.set(false);
+					toggleRow(openRow);
+				}, 5000);
 			}
 		}
 	});
@@ -163,10 +172,17 @@
 										/>
 										{#if $errors.price}<span class="invalid">{$errors.price}</span>{/if}
 									</div>
-									<Button color="red" on:click={() => toggleRow(i)}>Cancel</Button>
-									<Button color="green" type="submit">Submit</Button>
+									<Button color="red" on:click={() => toggleRow(i)} disabled={$isLoading}
+										>Cancel</Button
+									>
+									<Button color="green" type="submit" disabled={$isLoading}>Submit</Button>
 								</form>
-                                <SuperDebug data={$form} />
+								{#if $isLoading}
+									<div class="mb-4 mt-2">
+										<BarLoader size="60" color="#FF3E00" unit="px" duration="1s" />
+									</div>
+								{/if}
+								<SuperDebug data={$form} />
 							</div>
 						</TableBodyCell>
 					</TableBodyRow>

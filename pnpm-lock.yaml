@@ -64,6 +64,9 @@ devDependencies:
   svelte:
     specifier: ^4.2.7
     version: 4.2.7
+  svelte-loading-spinners:
+    specifier: ^0.3.4
+    version: 0.3.4
   sveltekit-superforms:
     specifier: ^2.12.2
     version: 2.12.2(@sveltejs/kit@2.0.0)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.19.12)(svelte@4.2.7)
@@ -2367,6 +2370,10 @@ packages:
       svelte: ^3.19.0 || ^4.0.0
     dependencies:
       svelte: 4.2.7
+    dev: true
+
+  /svelte-loading-spinners@0.3.4:
+    resolution: {integrity: sha512-vKaW71QMCBcTNijAGc0mUl8k3DQ66iYmp6MB8BMGCXyWk82bTrcLy8FOnSm9fE+8q6TwzD6PLUoYFHt0II93Xw==}
     dev: true
 
   /svelte-toasts@1.1.2:
