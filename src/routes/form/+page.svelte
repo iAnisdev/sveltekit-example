@@ -4,6 +4,10 @@
 	import SuperDebug from 'sveltekit-superforms';
 	import { BarLoader } from 'svelte-loading-spinners';
 	import { writable } from 'svelte/store';
+	import * as flashModule from 'sveltekit-flash-message/client';
+	import { getFlash } from 'sveltekit-flash-message';
+
+	const flash = getFlash(page);
 
 	import {
 		Table,
@@ -15,7 +19,9 @@
 		Label,
 		Input,
 		Select,
-		Button
+		Button,
+		Alert
+
 	} from 'flowbite-svelte';
 
 	const isLoading = writable(false);
@@ -69,22 +75,42 @@
 	const toggleRow = (i) => {
 		openRow = openRow === i ? null : i;
 		if (openRow === i) {
-			updateForm(i)
+			updateForm(i);
 		}
 	};
 
-	function updateForm(i){
+	function updateForm(i) {
 		form.set({
-				name: items[i].name,
-				color: items[i].color,
-				type: items[i].type,
-				price: items[i].price
-			});
+			name: items[i].name,
+			color: items[i].color,
+			type: items[i].type,
+			price: items[i].price
+		});
 	}
 
 	const { form, errors, message, enhance } = superForm(data.form, {
 		// No need for hidden fields with dataType: 'json'
 		dataType: 'json',
+		flashMessage: {
+			module: flashModule,
+			onError: ({ result, flashMessage }) => {
+				// Error handling for the flash message:
+				// - result is the ActionResult
+				// - flashMessage is the flash store (not the status message store)
+				const errorMessage = result.error.message;
+				console.log(errorMessage);
+				flashMessage.set(/* Your flash message type */);
+			},
+			onSuccess: ({ result, flashMessage }) => {
+				// Success handling for the flash message:
+				// - result is the ActionResult
+				// - flashMessage is the flash store (not the status message store)
+				const successMessage = result.success.message;
+				console.log('successMessage is: ', successMessage);
+				flashMessage.set(/* Your flash message type */);
+			}
+		},
+		syncFlashMessage: true,
 		async onSubmit({ cancel }) {
 			return;
 		},
@@ -104,12 +130,6 @@
 </script>
 
 <div class="container mx-auto mt-4">
-	{#if $message}
-		<!-- eslint-disable-next-line svelte/valid-compile -->
-		<div class="status" class:error={$page.status >= 400} class:success={$page.status == 200}>
-			{$message}
-		</div>
-	{/if}
 	<Table>
 		<TableHead>
 			<TableHeadCell>Product name</TableHeadCell>
@@ -176,6 +196,14 @@
 										/>
 										{#if $errors.price}<span class="invalid">{$errors.price}</span>{/if}
 									</div>
+
+									{#if $flash}
+										<div class="mb-6">
+											<Alert color={$flash.type == 'success' ? 'green' : 'red'} dismissable>
+												{$flash.message}
+											</Alert>
+										</div>
+									{/if}
 									<Button color="red" on:click={() => toggleRow(i)} disabled={$isLoading}
 										>Cancel</Button
 									>
