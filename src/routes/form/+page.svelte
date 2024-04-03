@@ -69,14 +69,18 @@
 	const toggleRow = (i) => {
 		openRow = openRow === i ? null : i;
 		if (openRow === i) {
-			form.set({
+			updateForm(i)
+		}
+	};
+
+	function updateForm(i){
+		form.set({
 				name: items[i].name,
 				color: items[i].color,
 				type: items[i].type,
 				price: items[i].price
 			});
-		}
-	};
+	}
 
 	const { form, errors, message, enhance } = superForm(data.form, {
 		// No need for hidden fields with dataType: 'json'
@@ -90,9 +94,9 @@
 				// data to be sent to the server
 				isLoading.set(true);
 				items[openRow] = form.data;
+				updateForm(openRow);
 				setTimeout(() => {
 					isLoading.set(false);
-					toggleRow(openRow);
 				}, 5000);
 			}
 		}
