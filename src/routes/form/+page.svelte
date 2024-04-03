@@ -74,6 +74,7 @@
 
 	const toggleRow = (i) => {
 		openRow = openRow === i ? null : i;
+		flash.set(false)
 		if (openRow === i) {
 			updateForm(i);
 		}
@@ -197,7 +198,7 @@
 										{#if $errors.price}<span class="invalid">{$errors.price}</span>{/if}
 									</div>
 
-									{#if $flash}
+									{#if $flash && !$isLoading}
 										<div class="mb-6">
 											<Alert color={$flash.type == 'success' ? 'green' : 'red'} dismissable>
 												{$flash.message}
@@ -211,7 +212,7 @@
 								</form>
 								{#if $isLoading}
 									<div class="mb-4 mt-2">
-										<BarLoader size="60" color="#FF3E00" unit="px" duration="1s" />
+										<BarLoader size="60" color="#FF3E00" unit="px" duration="10s" />
 									</div>
 								{/if}
 								<SuperDebug data={$form} />
