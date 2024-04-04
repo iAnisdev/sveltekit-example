@@ -30,20 +30,23 @@
 
 	export let data;
 
-	const items = [
+	let items = [
 		{
+			id: '1a2b3c4d5e6f7g8h9i0',
 			name: 'Apple MacBook Pro 17"',
 			color: 'Silver',
 			type: 'Laptop',
 			price: 2999
 		},
 		{
+			id: '1a2b3c4d5e6f7g8h9i1',
 			name: 'Microsoft Surface Pro',
 			color: 'White',
 			type: 'Laptop PC',
 			price: 1999
 		},
 		{
+			id: '1a2b3c4d5e6f7g8h9i2',
 			name: 'Magic Mouse 2',
 			color: 'Black',
 			type: 'Accessories',
@@ -72,20 +75,21 @@
 	let openRow;
 	let details;
 
-	const toggleRow = (i) => {
-		openRow = openRow === i ? null : i;
+	const toggleRow = (id) => {
+		openRow = openRow === id ? null : id;
 		flash.set(false)
-		if (openRow === i) {
-			updateForm(i);
+		if (openRow === id) {
+			updateForm(id);
 		}
 	};
 
-	function updateForm(i) {
+	function updateForm(id) {
+		let targetRow = items.find((item) => item.id === id);
 		form.set({
-			name: items[i].name,
-			color: items[i].color,
-			type: items[i].type,
-			price: items[i].price
+			name: targetRow.name,
+			color: targetRow.color,
+			type: targetRow.type,
+			price: targetRow.price
 		});
 	}
 
@@ -99,7 +103,6 @@
 				// - result is the ActionResult
 				// - flashMessage is the flash store (not the status message store)
 				const errorMessage = result.error.message;
-				console.log(errorMessage);
 				flashMessage.set(/* Your flash message type */);
 			},
 			onSuccess: ({ result, flashMessage }) => {
@@ -107,7 +110,6 @@
 				// - result is the ActionResult
 				// - flashMessage is the flash store (not the status message store)
 				const successMessage = result.success.message;
-				console.log('successMessage is: ', successMessage);
 				flashMessage.set(/* Your flash message type */);
 			}
 		},
@@ -120,7 +122,18 @@
 			if (form.valid) {
 				// data to be sent to the server
 				isLoading.set(true);
-				items[openRow] = form.data;
+				items = items.map((item) => {
+					if (item.id === openRow) {
+						return {
+							id: item.id,
+							name: form.data.name,
+							color: form.data.color,
+							type: form.data.type,
+							price: form.data.price
+						};
+					}
+					return item;
+				});
 				updateForm(openRow);
 				setTimeout(() => {
 					isLoading.set(false);
@@ -139,15 +152,15 @@
 			<TableHeadCell>Price</TableHeadCell>
 		</TableHead>
 		<TableBody class="divide-y">
-			{#each items as item, i}
-				<TableBodyRow on:click={() => toggleRow(i)}>
+			{#each items as item}
+				<TableBodyRow on:click={() => toggleRow(item.id)}>
 					<TableBodyCell>{item.name}</TableBodyCell>
 					<TableBodyCell>{item.color}</TableBodyCell>
 					<TableBodyCell>{item.type}</TableBodyCell>
 					<TableBodyCell>${item.price}</TableBodyCell>
 				</TableBodyRow>
-				{#if openRow === i}
-					<TableBodyRow on:dblclick={() => (details = item)}>
+				{#if openRow === item.id}
+					<TableBodyRow on:dblclick={() => (details = item.id)}>
 						<TableBodyCell colspan="4" class="p-0">
 							<div class="px-2 py-3" transition:slide={{ duration: 300, axis: 'y' }}>
 								<form method="POST" use:enhance>
@@ -205,7 +218,7 @@
 											</Alert>
 										</div>
 									{/if}
-									<Button color="red" on:click={() => toggleRow(i)} disabled={$isLoading}
+									<Button color="red" on:click={() => toggleRow(item.id)} disabled={$isLoading}
 										>Cancel</Button
 									>
 									<Button color="green" type="submit" disabled={$isLoading}>Submit</Button>
